@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MPOS Viewer</string>
+
+    <!--  activities titles -->
+    <string name="account_management_activity_title">Account Management</string>
+    <string name="account_view_activity_title">@string/app_name</string>
+
+    <!-- accounts management -->
+    <string name="accounts_management_action_add">Add</string>
+    <string name="accounts_management_unknown_qr_toast">Scanned code doesn\'t contain any MPOS account</string>
+    <string name="accounts_management_account_already_added">The account is already added</string>
+    <string name="accounts_management_account_added">Account successfully added</string>
+    <string name="accounts_management_account_add_failed">Failed to add account</string>
+
+    <!-- common errors -->
+    <string name="error_network_unavailable">Internet is currently unavailable. Please turn it on and try again.</string>
+
+    <!-- common messages -->
+    <string name="message_loading_please_wait_title">Loading...</string>
+    <string name="message_loading_please_wait_body">Please wait.</string>
+</resources>
