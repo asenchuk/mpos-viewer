@@ -47,6 +47,16 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public synchronized Account findAccountById(int id) {
+        Account account = null;
+        Cursor cursor = getReadableDatabase().query(Account.TABLE_NAME, null, String.format("%s = %d", BaseColumns._ID, id), null, null, null, null);
+        if(cursor.moveToNext()) {
+            account = new Account(cursor);
+        }
+        cursor.close();
+        return account;
+    }
+
     public synchronized Cursor findAllAccounts() {
         return getReadableDatabase().query(Account.TABLE_NAME, null, null, null, null, null, null);
     }

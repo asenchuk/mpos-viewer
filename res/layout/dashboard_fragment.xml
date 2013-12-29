@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="vertical">
+
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_info_block"
+                    android:layout_margin="10dp"
+                    android:padding="5dp">
+
+                <TextView
+                        android:id="@+id/dashboard_overview_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/InfoBlockHeaderTextView"
+                        android:text="@string/dashboard_overview_label"/>
+
+                <LinearLayout
+                        android:id="@+id/dashboard_first_rate_line_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/dashboard_overview_label"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+
+                    <!-- YOUR HASHRATE -->
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorHeaderTextView"
+                                android:text="@string/dashboard_your_hashrate"/>
+
+                        <TextView
+                                android:id="@+id/dashboard_your_hashrate_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorValueTextView"/>
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorMeasureTextView"
+                                android:text="@string/measure_khash_per_s"/>
+
+                    </LinearLayout>
+
+                    <!-- POOL HASHRATE -->
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorHeaderTextView"
+                                android:text="@string/dashboard_pool_hashrate"/>
+
+                        <TextView
+                                android:id="@+id/dashboard_pool_hashrate_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorValueTextView"/>
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorMeasureTextView"
+                                android:text="@string/measure_ghash_per_s"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:id="@+id/dashboard_second_rate_line_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/dashboard_first_rate_line_layout"
+                        android:orientation="horizontal"
+                        android:baselineAligned="false">
+
+                    <!-- YOUR SHARERATE -->
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorHeaderTextView"
+                                android:text="@string/dashboard_your_sharerate"/>
+
+                        <TextView
+                                android:id="@+id/dashboard_your_sharerate_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorValueTextView"/>
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorMeasureTextView"
+                                android:text="@string/measure_share_per_s"/>
+
+                    </LinearLayout>
+
+                    <!-- NET HASHRATE -->
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:orientation="vertical"
+                            android:layout_margin="10dp">
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorHeaderTextView"
+                                android:text="@string/dashboard_net_hashrate"/>
+
+                        <TextView
+                                android:id="@+id/dashboard_net_hashrate_value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorValueTextView"/>
+
+                        <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/RateIndicatorMeasureTextView"
+                                android:text="@string/measure_ghash_per_s"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <!-- ACCOUNT INFORMATION -->
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="5dp"
+                    android:background="@drawable/bg_info_block">
+
+                <TextView
+                        android:id="@+id/dashboard_balance_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/InfoBlockHeaderTextView"
+                        android:text="@string/dashboard_balance_label"/>
+
+                <TextView
+                        android:layout_alignTop="@+id/dashboard_confirmed_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dashboard_balance_confirmed"/>
+
+                <TextView
+                        android:id="@+id/dashboard_confirmed_balance"
+                        android:layout_below="@id/dashboard_balance_label"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_confirmed_balance"
+                        style="@style/AccountBalanceTextView"/>
+
+                <TextView
+                        android:layout_alignTop="@+id/dashboard_unconfirmed_balance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dashboard_balance_unconfirmed"/>
+
+                <TextView
+                        android:id="@+id/dashboard_unconfirmed_balance"
+                        android:layout_below="@id/dashboard_confirmed_balance"
+                        android:layout_alignParentRight="true"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:background="@drawable/bg_unconfirmed_balance"
+                        style="@style/AccountBalanceTextView"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+</ScrollView>

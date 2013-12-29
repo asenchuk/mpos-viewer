@@ -4,6 +4,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.taviscaron.mposviewer.rpc.result.GetDashboardDataResult;
+import net.taviscaron.mposviewer.rpc.result.GetPublicResult;
+import net.taviscaron.mposviewer.rpc.result.GetUserStatusResult;
 import net.taviscaron.mposviewer.util.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -46,7 +49,7 @@ public class RPC {
         GET_USER_WORKERS("getuserworkers", false, true, null, new String[] { "id" }, null),
         GET_USER_STATUS("getuserstatus", false, true, null, new String[] { "id" }, GetUserStatusResult.class),
         GET_POOL_STATUS("getpoolstatus", false, true, null, null, null),
-        GET_DASHBOARD_DATA("getdashboarddata", false, true, null, new String[] { "id" }, null),
+        GET_DASHBOARD_DATA("getdashboarddata", false, true, null, new String[] { "id" }, GetDashboardDataResult.class),
         GET_TOP_CONTRIBUTORS("gettopcontributors", false, true, null, null, null);
 
         public final boolean tokenRequired;

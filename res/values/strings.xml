@@ -4,7 +4,7 @@
 
     <!--  activities titles -->
     <string name="account_management_activity_title">Account Management</string>
-    <string name="account_view_activity_title">@string/app_name</string>
+    <string name="account_view_activity_title">MPOS Viewer</string>
 
     <!-- accounts management -->
     <string name="accounts_management_action_add">Add</string>
@@ -13,10 +13,38 @@
     <string name="accounts_management_account_added">Account successfully added</string>
     <string name="accounts_management_account_add_failed">Failed to add account</string>
 
+    <!-- tabs -->
+    <string name="account_info_tab_dashboard">Dashboard</string>
+    <string name="account_info_tab_workers">Workers</string>
+    <string name="account_info_tab_general_stats">General stats</string>
+    <string name="account_info_tab_last_blocks">Last blocks</string>
+    <string name="account_info_tab_user_hashrates">User hash rates</string>
+    <string name="account_info_tab_user_shares">User share rates</string>
+
+    <!-- account info -->
+    <string name="account_info_action_refresh">Refresh</string>
+    <string name="account_info_action_exit">Exit</string>
+
+    <!-- dashboard -->
+    <string name="dashboard_overview_label">OVERVIEW</string>
+    <string name="dashboard_your_hashrate">Your hashrate:</string>
+    <string name="dashboard_your_sharerate">Your sharerate:</string>
+    <string name="dashboard_pool_hashrate">Pool hashrate:</string>
+    <string name="dashboard_net_hashrate">Net hashrate:</string>
+    <string name="dashboard_balance_label">BALANCE</string>
+    <string name="dashboard_balance_confirmed">Confirmed:</string>
+    <string name="dashboard_balance_unconfirmed">Unconfirmed:</string>
+
     <!-- common errors -->
     <string name="error_network_unavailable">Internet is currently unavailable. Please turn it on and try again.</string>
+    <string name="error_failed_to_load_try_again">Failed to load data. Please try again later.</string>
 
     <!-- common messages -->
     <string name="message_loading_please_wait_title">Loading...</string>
     <string name="message_loading_please_wait_body">Please wait.</string>
+
+    <!-- measures -->
+    <string name="measure_khash_per_s">kH/s</string>
+    <string name="measure_ghash_per_s">GH/s</string>
+    <string name="measure_share_per_s">share/s</string>
 </resources>

@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import net.taviscaron.mposviewer.model.Account;
-import net.taviscaron.mposviewer.rpc.GetPublicResult;
-import net.taviscaron.mposviewer.rpc.GetUserStatusResult;
+import net.taviscaron.mposviewer.rpc.result.GetPublicResult;
+import net.taviscaron.mposviewer.rpc.result.GetUserStatusResult;
 import net.taviscaron.mposviewer.rpc.RPC;
 import net.taviscaron.mposviewer.storage.DBHelper;
 

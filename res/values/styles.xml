@@ -3,4 +3,35 @@
     <style name="DefaultTextView" parent="android:Widget.TextView">
         <item name="android:textColor">#000</item>
     </style>
+
+    <style name="InfoBlockHeaderTextView" parent="DefaultTextView">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="RateIndicatorHeaderTextView" parent="DefaultTextView">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="RateIndicatorValueTextView" parent="DefaultTextView">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">#666</item>
+    </style>
+
+    <style name="RateIndicatorMeasureTextView" parent="DefaultTextView">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#666</item>
+    </style>
+
+    <style name="AccountBalanceTextView" parent="DefaultTextView">
+        <item name="android:padding">2dp</item>
+        <item name="android:textColor">#264409</item>
+        <item name="android:gravity">right</item>
+    </style>
 </resources>

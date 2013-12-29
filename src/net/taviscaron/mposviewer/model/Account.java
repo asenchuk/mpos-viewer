@@ -1,6 +1,9 @@
 package net.taviscaron.mposviewer.model;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.provider.BaseColumns;
+import net.taviscaron.mposviewer.util.DBUtils;
 
 import java.io.Serializable;
 
@@ -22,6 +25,19 @@ public class Account implements Serializable {
     private int userId;
     private String token;
     private String url;
+
+    public Account() {
+        // default constructor
+    }
+
+    public Account(Cursor cursor) {
+        id = DBUtils.getInt(cursor, BaseColumns._ID);
+        poolName = DBUtils.getString(cursor, POOL_NAME_ATTR);
+        userName = DBUtils.getString(cursor, USER_NAME_ATTR);
+        userId = DBUtils.getInt(cursor, USER_ID_ATTR);
+        token = DBUtils.getString(cursor, TOKEN_ATTR);
+        url = DBUtils.getString(cursor, URL_ATTR);
+    }
 
     public int getId() {
         return id;

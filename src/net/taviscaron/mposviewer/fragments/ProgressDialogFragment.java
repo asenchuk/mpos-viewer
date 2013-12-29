@@ -11,6 +11,8 @@ import net.taviscaron.mposviewer.R;
  * @author Andrei Senchuk
  */
 public class ProgressDialogFragment extends DialogFragment {
+    public static final String FRAGMENT_TAG = "ProgressDialogFragment";
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ProgressDialog progressDialog = new ProgressDialog(getActivity());

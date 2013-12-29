@@ -1,12 +1,16 @@
 package net.taviscaron.mposviewer.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -15,6 +19,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import net.taviscaron.mposviewer.R;
+import net.taviscaron.mposviewer.core.Constants;
 import net.taviscaron.mposviewer.fragments.AccountAddFragment;
 import net.taviscaron.mposviewer.fragments.ProgressDialogFragment;
 import net.taviscaron.mposviewer.model.Account;
@@ -52,7 +57,14 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
                 android.R.id.text2
         }, 0);
 
-        ((ListView)findViewById(R.id.accounts_management_list)).setAdapter(listAdapter);
+        ListView listView = (ListView)findViewById(R.id.accounts_management_list);
+        listView.setAdapter(listAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                onPoolSelected((int)id);
+            }
+        });
 
         // get the fragment (it's not null in case retained instance exists)
         FragmentManager fm = getSupportFragmentManager();
@@ -128,7 +140,18 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
         }
     }
 
-    public void addAccountFromStringCode(String code) {
+    private void onPoolSelected(int id) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.edit().putInt(Constants.CURRENT_ACCOUNT_ID_PREF_KEY, id).commit();
+
+        Intent intent = new Intent(this, AccountViewActivity.class);
+        intent.putExtra(AccountViewActivity.ACCOUNT_ID_KEY, id);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        finish();
+    }
+
+    private void addAccountFromStringCode(String code) {
         Matcher matcher = Pattern.compile("^\\|(.+)\\|([a-f0-9]+)\\|(\\d+)\\|$").matcher(code);
         if(matcher.find()) {
             String url = matcher.group(1);

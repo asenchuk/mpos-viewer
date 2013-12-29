@@ -1,4 +1,4 @@
-package net.taviscaron.mposviewer.rpc;
+package net.taviscaron.mposviewer.rpc.result;
 
 import com.google.gson.annotations.SerializedName;
 
