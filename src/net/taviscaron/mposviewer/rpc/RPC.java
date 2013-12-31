@@ -4,7 +4,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.taviscaron.mposviewer.rpc.result.GetDashboardDataResult;
+import net.taviscaron.mposviewer.rpc.model.Worker;
+import net.taviscaron.mposviewer.rpc.result.GetPoolStatusResult;
 import net.taviscaron.mposviewer.rpc.result.GetPublicResult;
 import net.taviscaron.mposviewer.rpc.result.GetUserStatusResult;
 import net.taviscaron.mposviewer.util.IOUtils;
@@ -46,10 +47,10 @@ public class RPC {
         GET_POOL_SHARE_RATE("getpoolsharerate", false, true, null, null, null),
         GET_TIME_SINCE_LAST_BLOCK("gettimesincelastblock", false, true, null, null, null),
         GET_PUBLIC("public", true, false, null, null, GetPublicResult.class),
-        GET_USER_WORKERS("getuserworkers", false, true, null, new String[] { "id" }, null),
+        GET_USER_WORKERS("getuserworkers", false, true, null, new String[] { "id" }, Worker[].class),
         GET_USER_STATUS("getuserstatus", false, true, null, new String[] { "id" }, GetUserStatusResult.class),
-        GET_POOL_STATUS("getpoolstatus", false, true, null, null, null),
-        GET_DASHBOARD_DATA("getdashboarddata", false, true, null, new String[] { "id" }, GetDashboardDataResult.class),
+        GET_POOL_STATUS("getpoolstatus", false, true, null, null, GetPoolStatusResult.class),
+        GET_DASHBOARD_DATA("getdashboarddata", false, true, null, new String[] { "id" }, null),
         GET_TOP_CONTRIBUTORS("gettopcontributors", false, true, null, null, null);
 
         public final boolean tokenRequired;
@@ -201,6 +202,7 @@ public class RPC {
                 }
 
                 JSONObject jsonObj = new JSONObject(new String(sb));
+                Object jsonDataObject = jsonObj;
 
                 if(!method.reducedResult) {
                     jsonObj = jsonObj.getJSONObject(method.name);
@@ -210,13 +212,17 @@ public class RPC {
                         Log.d(TAG, "Response generated in: " + jsonObj.getDouble("runtime"));
                     }
 
-                    jsonObj = jsonObj.getJSONObject("data");
+                    if(method.responseClass != null && method.responseClass.isArray()) {
+                        jsonDataObject = jsonObj.getJSONArray("data");
+                    } else {
+                        jsonDataObject = jsonObj.getJSONObject("data");
+                    }
                 }
 
                 if(method.responseClass != null) {
-                    result = gson.fromJson(jsonObj.toString(), method.responseClass);
+                    result = gson.fromJson(jsonDataObject.toString(), method.responseClass);
                 } else {
-                    result = jsonObj;
+                    result = jsonDataObject;
                 }
             } else {
                 Log.w(TAG, "api returned code " + code);

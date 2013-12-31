@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -16,10 +15,11 @@ import net.taviscaron.mposviewer.R;
 import net.taviscaron.mposviewer.core.Constants;
 import net.taviscaron.mposviewer.fragments.*;
 import net.taviscaron.mposviewer.model.Account;
-import net.taviscaron.mposviewer.rpc.result.GetDashboardDataResult;
 import net.taviscaron.mposviewer.rpc.RPC;
 import net.taviscaron.mposviewer.storage.DBHelper;
 import net.taviscaron.mposviewer.util.IOUtils;
+
+import java.util.Map;
 
 /**
  * Shows MPOS account information
@@ -70,7 +70,6 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
     private RPCDataLoaderFragment loaderFragment;
     private Account account;
     private ViewPager viewPager;
-    private GetDashboardDataResult dashboardData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,7 +164,7 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
     private void loadData() {
         if(!loaderFragment.isLoading() && IOUtils.isNetworkAvailable(this, true)) {
-            loaderFragment.load(RPC.Method.GET_DASHBOARD_DATA);
+            loaderFragment.load(RPC.Method.GET_USER_STATUS, RPC.Method.GET_USER_WORKERS, RPC.Method.GET_POOL_STATUS);
         }
     }
 
@@ -182,16 +181,13 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
     @Override
     public void onDataLoadStarted() {
-        if(dashboardData == null) {
-            ProgressDialogFragment pdf = new ProgressDialogFragment();
-            pdf.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
-        }
-
+        ProgressDialogFragment pdf = new ProgressDialogFragment();
+        pdf.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
         invalidateOptionsMenu();
     }
 
     @Override
-    public void onDataLoadFinished(Object result, RPC.Error error) {
+    public void onDataLoadFinished(Map<RPC.Method, RPC.RPCResult> results) {
         ProgressDialogFragment pdf = (ProgressDialogFragment)getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.FRAGMENT_TAG);
         if(pdf != null) {
             pdf.dismiss();
@@ -199,16 +195,16 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
         invalidateOptionsMenu();
 
-        if(error != null || result == null) {
-            Toast.makeText(this, R.string.error_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                dashboardData = (GetDashboardDataResult)result;
-                updateViews();
-            } catch(ClassCastException e) {
-                Log.w(TAG, "Can't cast dashboarddata result", e);
-                Toast.makeText(this, R.string.error_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
-            }
-        }
+//        if(error != null || result == null) {
+//            Toast.makeText(this, R.string.error_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
+//        } else {
+//            try {
+//                dashboardData = (GetDashboardDataResult)result;
+//                updateViews();
+//            } catch(ClassCastException e) {
+//                Log.w(TAG, "Can't cast dashboarddata result", e);
+//                Toast.makeText(this, R.string.error_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
+//            }
+//        }
     }
 }

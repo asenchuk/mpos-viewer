@@ -14,9 +14,14 @@ public class ProgressDialogFragment extends DialogFragment {
     public static final String FRAGMENT_TAG = "ProgressDialogFragment";
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setCancelable(false);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle(R.string.message_loading_please_wait_title);
