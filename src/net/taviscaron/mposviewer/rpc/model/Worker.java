@@ -23,7 +23,7 @@ public class Worker {
     private int hashrate;
 
     @SerializedName("difficulty")
-    private int difficulty;
+    private float difficulty;
 
     @SerializedName("count_all")
     private int countAll;
@@ -71,11 +71,11 @@ public class Worker {
         this.hashrate = hashrate;
     }
 
-    public int getDifficulty() {
+    public float getDifficulty() {
         return difficulty;
     }
 
-    public void setDifficulty(int difficulty) {
+    public void setDifficulty(float difficulty) {
         this.difficulty = difficulty;
     }
 

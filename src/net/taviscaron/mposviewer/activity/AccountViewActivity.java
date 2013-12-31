@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -16,10 +17,16 @@ import net.taviscaron.mposviewer.core.Constants;
 import net.taviscaron.mposviewer.fragments.*;
 import net.taviscaron.mposviewer.model.Account;
 import net.taviscaron.mposviewer.rpc.RPC;
+import net.taviscaron.mposviewer.rpc.result.GetPoolStatusResult;
+import net.taviscaron.mposviewer.rpc.result.GetUserStatusResult;
 import net.taviscaron.mposviewer.storage.DBHelper;
 import net.taviscaron.mposviewer.util.IOUtils;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Shows MPOS account information
@@ -27,6 +34,8 @@ import java.util.Map;
  */
 public class AccountViewActivity extends SherlockFragmentActivity implements RPCDataLoaderFragment.RPCDataLoaderFragmentListener {
     private static final String TAG = "AccountViewActivity";
+    private static final String IS_ONCE_DATA_LOADED_KEY = "isObceDataLoaded";
+
     public static final String ACCOUNT_ID_KEY = "accountId";
 
     private enum Page {
@@ -39,10 +48,12 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
         final int titleId;
         final Class<? extends Fragment> clazz;
+        final String tag;
 
         Page(Class<? extends Fragment> clazz, int titleId) {
             this.clazz = clazz;
             this.titleId = titleId;
+            this.tag = UUID.randomUUID().toString();
         }
     }
 
@@ -67,21 +78,30 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         }
     };
 
+    private final List<Fragment> fragments = new ArrayList<Fragment>(Page.values().length);
     private RPCDataLoaderFragment loaderFragment;
     private Account account;
     private ViewPager viewPager;
+    private boolean isOnceDataLoaded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_info);
 
+        final FragmentManager fm = getSupportFragmentManager();
+
+        for(Page page : Page.values()) {
+            Fragment fragment = Fragment.instantiate(this, page.clazz.getName());
+            fragments.add(fragment);
+        }
+
         viewPager = (ViewPager)findViewById(R.id.account_info_pager);
         viewPager.setOnPageChangeListener(pageChangeListener);
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentPagerAdapter(fm) {
             @Override
             public Fragment getItem(int i) {
-                return Fragment.instantiate(getApplicationContext(), Page.values()[i].clazz.getName());
+                return fragments.get(i);
             }
 
             @Override
@@ -104,10 +124,10 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         }
 
         // data loader fragment
-        loaderFragment = (RPCDataLoaderFragment)getSupportFragmentManager().findFragmentByTag(RPCDataLoaderFragment.DEFAULT_FRAGMENT_TAG);
+        loaderFragment = (RPCDataLoaderFragment)fm.findFragmentByTag(RPCDataLoaderFragment.DEFAULT_FRAGMENT_TAG);
         if(loaderFragment == null) {
             loaderFragment = new RPCDataLoaderFragment();
-            getSupportFragmentManager().beginTransaction().add(loaderFragment, RPCDataLoaderFragment.DEFAULT_FRAGMENT_TAG).commit();
+            fm.beginTransaction().add(loaderFragment, RPCDataLoaderFragment.DEFAULT_FRAGMENT_TAG).commit();
         }
    }
 
@@ -134,8 +154,15 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
         loaderFragment.setUrl(account.getUrl());
         loaderFragment.setToken(account.getToken());
+    }
 
-        loadData();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(!isOnceDataLoaded) {
+            loadData();
+        }
     }
 
     @Override
@@ -162,6 +189,18 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         return result;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(IS_ONCE_DATA_LOADED_KEY, isOnceDataLoaded);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        isOnceDataLoaded = savedInstanceState.getBoolean(IS_ONCE_DATA_LOADED_KEY, isOnceDataLoaded);
+    }
+
     private void loadData() {
         if(!loaderFragment.isLoading() && IOUtils.isNetworkAvailable(this, true)) {
             loaderFragment.load(RPC.Method.GET_USER_STATUS, RPC.Method.GET_USER_WORKERS, RPC.Method.GET_POOL_STATUS);
@@ -175,14 +214,14 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         finish();
     }
 
-    private void updateViews() {
-
-    }
-
     @Override
     public void onDataLoadStarted() {
-        ProgressDialogFragment pdf = new ProgressDialogFragment();
-        pdf.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
+        if(!isOnceDataLoaded) {
+            ProgressDialogFragment pdf = new ProgressDialogFragment();
+            pdf.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
+        } else {
+            Toast.makeText(this, R.string.message_refreshing, Toast.LENGTH_SHORT).show();
+        }
         invalidateOptionsMenu();
     }
 
@@ -193,18 +232,45 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
             pdf.dismiss();
         }
 
+        isOnceDataLoaded = true;
         invalidateOptionsMenu();
 
-//        if(error != null || result == null) {
-//            Toast.makeText(this, R.string.error_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
-//        } else {
-//            try {
-//                dashboardData = (GetDashboardDataResult)result;
-//                updateViews();
-//            } catch(ClassCastException e) {
-//                Log.w(TAG, "Can't cast dashboarddata result", e);
-//                Toast.makeText(this, R.string.error_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
-//            }
-//        }
+        int failedResults = 0;
+        for(RPC.RPCResult r : results.values()) {
+            if(r.error != null || r.result == null) {
+                failedResults++;
+            }
+        }
+
+        if(failedResults < results.size()) {
+            DashboardFragment.DashboardState dashboardState = new DashboardFragment.DashboardState();
+
+            RPC.RPCResult result = results.get(RPC.Method.GET_USER_STATUS);
+            if(result.error == null && result.result != null) {
+                GetUserStatusResult userStatusResult = (GetUserStatusResult)result.result;
+                dashboardState.setYourHashrate(userStatusResult.getHashrate());
+                dashboardState.setYourSharerate(userStatusResult.getSharerate());
+
+                GetUserStatusResult.Transactions transactions = userStatusResult.getTransactions();
+                dashboardState.setConfirmedBalance(transactions.getCredit() - transactions.getDebit() - transactions.getManualDebit() - transactions.getDonation() - transactions.getTxFee());
+                dashboardState.setUnconfirmedBalanceAvailable(false);
+            }
+
+            result = results.get(RPC.Method.GET_POOL_STATUS);
+            if(result.error == null && result.result != null) {
+                GetPoolStatusResult poolStatusResult = (GetPoolStatusResult)result.result;
+                dashboardState.setPoolHashrate(poolStatusResult.getHashrate() / 1e6F);
+                dashboardState.setNetHashrate(poolStatusResult.getNetHashRate() / 1e9F);
+            }
+
+            DashboardFragment dashboardFragment = (DashboardFragment)fragments.get(Page.DASHBOARD.ordinal());
+            dashboardFragment.setState(dashboardState);
+
+            if(failedResults > 0) {
+                Toast.makeText(this, R.string.error_partially_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, R.string.error_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
+        }
     }
 }

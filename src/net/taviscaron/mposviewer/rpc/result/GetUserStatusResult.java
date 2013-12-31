@@ -30,16 +30,19 @@ public class GetUserStatusResult {
 
     public static class Transactions {
         @SerializedName("Credit")
-        public double credit;
+        private double credit;
 
         @SerializedName("Debit_AP")
-        public double debit;
+        private double debit;
+
+        @SerializedName("Debit_MP")
+        private double manualDebit;
 
         @SerializedName("Donation")
-        public double donation;
+        private double donation;
 
         @SerializedName("TXFee")
-        public double txFee;
+        private double txFee;
 
         public double getCredit() {
             return credit;
@@ -72,12 +75,20 @@ public class GetUserStatusResult {
         public void setTxFee(double txFee) {
             this.txFee = txFee;
         }
+
+        public double getManualDebit() {
+            return manualDebit;
+        }
+
+        public void setManualDebit(double manualDebit) {
+            this.manualDebit = manualDebit;
+        }
     }
 
     private String username;
     private Shares shares;
     private int hashrate;
-    private double sharerate;
+    private float sharerate;
     private Transactions transactions;
 
     public String getUsername() {
@@ -104,11 +115,11 @@ public class GetUserStatusResult {
         this.hashrate = hashrate;
     }
 
-    public double getSharerate() {
+    public float getSharerate() {
         return sharerate;
     }
 
-    public void setSharerate(double sharerate) {
+    public void setSharerate(float sharerate) {
         this.sharerate = sharerate;
     }
 

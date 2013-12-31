@@ -38,10 +38,12 @@
     <!-- common errors -->
     <string name="error_network_unavailable">Internet is currently unavailable. Please turn it on and try again.</string>
     <string name="error_failed_to_load_try_again">Failed to load data. Please try again later.</string>
+    <string name="error_partially_failed_to_load_try_again">Data has been loaded partially due to unknown network or server issues. Please try again later.</string>
 
     <!-- common messages -->
     <string name="message_loading_please_wait_title">Loading...</string>
     <string name="message_loading_please_wait_body">Please wait.</string>
+    <string name="message_refreshing">Refreshing...</string>
 
     <!-- measures -->
     <string name="measure_khash_per_s">kH/s</string>

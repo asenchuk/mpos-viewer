@@ -58,9 +58,9 @@ public class RPC {
         public final String[] requiredArgs;
         public final String[] optionalArgs;
         public final String name;
-        public final Class responseClass;
+        public final Class<?> responseClass;
 
-        private Method(String name, boolean reducedResult, boolean tokenRequired, String[] requiredArgs, String[] optionalArgs, Class responseClass) {
+        private Method(String name, boolean reducedResult, boolean tokenRequired, String[] requiredArgs, String[] optionalArgs, Class<?> responseClass) {
             this.name = name;
             this.reducedResult = reducedResult;
             this.tokenRequired = tokenRequired;
