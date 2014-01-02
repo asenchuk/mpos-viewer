@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.util.SparseArray;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -22,11 +24,7 @@ import net.taviscaron.mposviewer.rpc.result.GetUserStatusResult;
 import net.taviscaron.mposviewer.storage.DBHelper;
 import net.taviscaron.mposviewer.util.IOUtils;
 
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Shows MPOS account information
@@ -34,7 +32,7 @@ import java.util.UUID;
  */
 public class AccountViewActivity extends SherlockFragmentActivity implements RPCDataLoaderFragment.RPCDataLoaderFragmentListener {
     private static final String TAG = "AccountViewActivity";
-    private static final String IS_ONCE_DATA_LOADED_KEY = "isObceDataLoaded";
+    private static final String IS_ONCE_DATA_LOADED_KEY = "isOnceDataLoaded";
 
     public static final String ACCOUNT_ID_KEY = "accountId";
 
@@ -48,12 +46,10 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
         final int titleId;
         final Class<? extends Fragment> clazz;
-        final String tag;
 
         Page(Class<? extends Fragment> clazz, int titleId) {
             this.clazz = clazz;
             this.titleId = titleId;
-            this.tag = UUID.randomUUID().toString();
         }
     }
 
@@ -78,9 +74,8 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         }
     };
 
-    private final List<Fragment> fragments = new ArrayList<Fragment>(Page.values().length);
+    private final SparseArray<Fragment> fragments = new SparseArray<Fragment>(Page.values().length);
     private RPCDataLoaderFragment loaderFragment;
-    private Account account;
     private ViewPager viewPager;
     private boolean isOnceDataLoaded;
 
@@ -91,27 +86,25 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
         final FragmentManager fm = getSupportFragmentManager();
 
-        for(Page page : Page.values()) {
-            Fragment fragment = Fragment.instantiate(this, page.clazz.getName());
-            fragments.add(fragment);
-        }
-
         viewPager = (ViewPager)findViewById(R.id.account_info_pager);
         viewPager.setOnPageChangeListener(pageChangeListener);
-        viewPager.setAdapter(new FragmentPagerAdapter(fm) {
+        viewPager.setOffscreenPageLimit(Page.values().length);
+        viewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
             @Override
             public Fragment getItem(int i) {
-                return fragments.get(i);
+                return Fragment.instantiate(getApplicationContext(), Page.values()[i].clazz.getName());
+            }
+
+            @Override
+            public Fragment instantiateItem(ViewGroup container, int position) {
+                Fragment fragment = (Fragment)super.instantiateItem(container, position);
+                fragments.put(position, fragment);
+                return fragment;
             }
 
             @Override
             public int getCount() {
                 return Page.values().length;
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return getString(Page.values()[position].titleId);
             }
         });
 
@@ -144,16 +137,16 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
         // load account
         DBHelper dbHelper = new DBHelper(this);
-        account = dbHelper.findAccountById(accountId);
+        Account account = dbHelper.findAccountById(accountId);
         dbHelper.close();
 
         if(account == null) {
             Log.w(TAG, "Account with id " + accountId + " is not found.");
             exitAccount();
+        } else {
+            loaderFragment.setUrl(account.getUrl());
+            loaderFragment.setToken(account.getToken());
         }
-
-        loaderFragment.setUrl(account.getUrl());
-        loaderFragment.setToken(account.getToken());
     }
 
     @Override

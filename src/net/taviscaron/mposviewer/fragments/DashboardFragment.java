@@ -94,7 +94,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+setRetainInstance(true);
         if(savedInstanceState != null) {
             state = (DashboardState)savedInstanceState.getSerializable(DASHBOARD_STATE_KEY);
         }
@@ -125,8 +125,8 @@ public class DashboardFragment extends Fragment {
             yourSharerateTextView.setText(String.format("%.2f", state.getYourSharerate()));
             poolHashrateTextView.setText(String.format("%.2f", state.getPoolHashrate()));
             netHashrateTextView.setText(String.format("%.2f", state.getNetHashrate()));
-            confirmedBalanceTextView.setText(Double.toString(state.getConfirmedBalance()));
-            unconfirmedBalanceTextView.setText((state.isUnconfirmedBalanceAvailable()) ? Double.toString(state.getUnconfirmedBalance()) : "-");
+            confirmedBalanceTextView.setText(String.format("%.8f", state.getConfirmedBalance()));
+            unconfirmedBalanceTextView.setText((state.isUnconfirmedBalanceAvailable()) ? String.format("%.8f", state.getUnconfirmedBalance()) : "-");
         } else {
             yourHashrateTextView.setText("-");
             yourSharerateTextView.setText("-");

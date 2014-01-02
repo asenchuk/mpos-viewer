@@ -66,7 +66,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean isAccountExists(String url, String token, int userId) {
-        Cursor cursor = getReadableDatabase().query(Account.TABLE_NAME, null, String.format("%s = '%s' AND %s = %d", Account.TOKEN_ATTR, token, Account.USER_ID_ATTR, userId), null, null, null, null);
+        Cursor cursor = getReadableDatabase().query(Account.TABLE_NAME, null, String.format("%s = '%s' AND %s = '%s' AND %s = %d", Account.URL_ATTR, url, Account.TOKEN_ATTR, token, Account.USER_ID_ATTR, userId), null, null, null, null);
         boolean result = (cursor.getCount() > 0);
         cursor.close();
         return result;
