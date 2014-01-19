@@ -47,6 +47,7 @@
     <string name="gen_stats_active_workers">Current Active Workers</string>
     <string name="gen_stats_next_block">Next Network Block</string>
     <string name="gen_stats_last_block_found">Last Block Found</string>
+    <string name="gen_stats_difficulty">Difficulty</string>
     <string name="gen_stats_est_avg_time_per_round_net">Est. Avg. Time Per Round (Network)</string>
     <string name="gen_stats_est_avg_time_per_round_pool">Est. Avg. Time Per Round (Pool)</string>
     <string name="gen_stats_est_shares_this_round">Est. Shares This Round</string>

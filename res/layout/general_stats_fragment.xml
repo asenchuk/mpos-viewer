@@ -89,12 +89,30 @@
                 android:layout_alignBaseline="@+id/gen_stats_last_block_label"
                 android:layout_alignParentRight="true"/>
 
+        <!-- DIFFICULTY -->
+        <TextView
+                android:id="@+id/gen_stats_difficulty_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gen_stats_last_block_label"
+                android:layout_alignParentLeft="true"
+                android:text="@string/gen_stats_difficulty"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_difficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/gen_stats_difficulty_label"
+                android:layout_alignParentRight="true"/>
+
+
         <!-- EST AVG TIME PER ROUND (POOL) -->
         <TextView
                 android:id="@+id/gen_stats_est_avg_round_time_pool_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/gen_stats_last_block_label"
+                android:layout_below="@+id/gen_stats_difficulty_label"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/gen_stats_est_avg_round_time_pool"
                 android:text="@string/gen_stats_est_avg_time_per_round_pool"

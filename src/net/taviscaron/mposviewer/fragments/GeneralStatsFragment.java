@@ -28,6 +28,7 @@ public class GeneralStatsFragment extends RPCDataPresenterFragment {
         private int estAvgTimePerRound;
         private int estShares;
         private int timeSinceLastBlock;
+        private int difficulty;
     }
 
     private TextView poolHashRateTextView;
@@ -38,6 +39,7 @@ public class GeneralStatsFragment extends RPCDataPresenterFragment {
     private TextView estAvgTimePerRoundPoolTextView;
     private TextView estSharesThisRoundTextView;
     private TextView timeSinceLastBlockTextView;
+    private TextView difficultyTextView;
     private Stats stats;
 
     public GeneralStatsFragment() {
@@ -64,6 +66,8 @@ public class GeneralStatsFragment extends RPCDataPresenterFragment {
         estAvgTimePerRoundPoolTextView = (TextView)v.findViewById(R.id.gen_stats_est_avg_round_time_pool);
         estSharesThisRoundTextView = (TextView)v.findViewById(R.id.gen_stats_est_shares);
         timeSinceLastBlockTextView = (TextView)v.findViewById(R.id.gen_stats_time_since_last_block);
+        difficultyTextView = (TextView)v.findViewById(R.id.gen_stats_difficulty);
+
         updateView();
         return v;
     }
@@ -87,6 +91,7 @@ public class GeneralStatsFragment extends RPCDataPresenterFragment {
             estAvgTimePerRoundPoolTextView.setText(String.format(formatSeconds(stats.estAvgTimePerRound)));
             estSharesThisRoundTextView.setText(Integer.toString(stats.estShares));
             timeSinceLastBlockTextView.setText(String.format(formatSeconds(stats.timeSinceLastBlock)));
+            difficultyTextView.setText(Integer.toString(stats.difficulty));
         } else {
             poolHashRateTextView.setText("-");
             poolEfficiencyTextView.setText("-");
@@ -96,6 +101,7 @@ public class GeneralStatsFragment extends RPCDataPresenterFragment {
             estAvgTimePerRoundPoolTextView.setText("-");
             estSharesThisRoundTextView.setText("-");
             timeSinceLastBlockTextView.setText("-");
+            difficultyTextView.setText("-");
         }
     }
 
@@ -114,6 +120,7 @@ public class GeneralStatsFragment extends RPCDataPresenterFragment {
             stats.estAvgTimePerRound = (int)statusResult.getEstimatedTime();
             stats.estShares = (int)statusResult.getEstimatedShares();
             stats.timeSinceLastBlock = statusResult.getTimeSinceLastBlock();
+            stats.difficulty = (int)statusResult.getDifficulty();
 
             updateView();
         }
