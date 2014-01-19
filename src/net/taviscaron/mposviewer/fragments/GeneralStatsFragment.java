@@ -19,7 +19,7 @@ import java.util.Map;
 public class GeneralStatsFragment extends RPCDataPresenterFragment {
     private static final String STATS_BUNDLE_KEY = "stats";
 
-    private class Stats implements Serializable {
+    private static class Stats implements Serializable {
         private float poolHashRate;
         private float poolEfficiency;
         private int activeWorkers;
