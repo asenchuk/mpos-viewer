@@ -91,6 +91,7 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
             public Fragment instantiateItem(ViewGroup container, int position) {
                 Fragment fragment = (Fragment)super.instantiateItem(container, position);
                 fragments.put(position, fragment);
+                invalidateOptionsMenu();
                 return fragment;
             }
 
@@ -133,12 +134,6 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
             Log.w(TAG, "Account with id " + accountId + " is not found.");
             exitAccount();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        invalidateOptionsMenu();
     }
 
     @Override
