@@ -18,31 +18,22 @@ import net.taviscaron.mposviewer.R;
 import net.taviscaron.mposviewer.core.Constants;
 import net.taviscaron.mposviewer.fragments.*;
 import net.taviscaron.mposviewer.model.Account;
-import net.taviscaron.mposviewer.rpc.RPC;
-import net.taviscaron.mposviewer.rpc.result.GetPoolStatusResult;
-import net.taviscaron.mposviewer.rpc.result.GetUserStatusResult;
 import net.taviscaron.mposviewer.storage.DBHelper;
-import net.taviscaron.mposviewer.util.IOUtils;
-
-import java.util.Map;
 
 /**
  * Shows MPOS account information
  * @author Andrei Senchuk
  */
-public class AccountViewActivity extends SherlockFragmentActivity implements RPCDataLoaderFragment.RPCDataLoaderFragmentListener {
+public class AccountViewActivity extends SherlockFragmentActivity implements RPCDataPresenterFragment.RPCDataAccountProvider, RPCDataPresenterFragment.RPCDataSynchronousLoadCallback, RPCDataPresenterFragment.RPCDataLoadCallback {
     private static final String TAG = "AccountViewActivity";
-    private static final String IS_ONCE_DATA_LOADED_KEY = "isOnceDataLoaded";
+    private static final String SYNC_LOADERS_BUNDLE_KEY = "syncLoaders";
 
     public static final String ACCOUNT_ID_KEY = "accountId";
 
     private enum Page {
         DASHBOARD(DashboardFragment.class, R.string.account_info_tab_dashboard),
         WORKERS(WorkersFragment.class, R.string.account_info_tab_workers),
-        GENERAL_STATS(GeneralStatsFragment.class, R.string.account_info_tab_general_stats),
-        LAST_BLOCKS(LastBlocksFragment.class, R.string.account_info_tab_last_blocks),
-        USER_HASHRATES(UserHashratesFragment.class, R.string.account_info_tab_user_hashrates),
-        USER_SHARERATES(UserShareratesFragment.class, R.string.account_info_tab_user_shares);
+        GENERAL_STATS(GeneralStatsFragment.class, R.string.account_info_tab_general_stats);
 
         final int titleId;
         final Class<? extends Fragment> clazz;
@@ -57,6 +48,7 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         @Override
         public void onPageSelected(int position) {
             getSupportActionBar().setSelectedNavigationItem(position);
+            invalidateOptionsMenu();
         }
     };
 
@@ -75,9 +67,9 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
     };
 
     private final SparseArray<Fragment> fragments = new SparseArray<Fragment>(Page.values().length);
-    private RPCDataLoaderFragment loaderFragment;
     private ViewPager viewPager;
-    private boolean isOnceDataLoaded;
+    private Account account;
+    private int syncLoaders;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,11 +108,8 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
             actionBar.addTab(actionBar.newTab().setText(page.titleId).setTabListener(tabListener));
         }
 
-        // data loader fragment
-        loaderFragment = (RPCDataLoaderFragment)fm.findFragmentByTag(RPCDataLoaderFragment.DEFAULT_FRAGMENT_TAG);
-        if(loaderFragment == null) {
-            loaderFragment = new RPCDataLoaderFragment();
-            fm.beginTransaction().add(loaderFragment, RPCDataLoaderFragment.DEFAULT_FRAGMENT_TAG).commit();
+        if(savedInstanceState != null) {
+            syncLoaders = savedInstanceState.getInt(SYNC_LOADERS_BUNDLE_KEY);
         }
    }
 
@@ -137,31 +126,33 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
 
         // load account
         DBHelper dbHelper = new DBHelper(this);
-        Account account = dbHelper.findAccountById(accountId);
+        account = dbHelper.findAccountById(accountId);
         dbHelper.close();
 
         if(account == null) {
             Log.w(TAG, "Account with id " + accountId + " is not found.");
             exitAccount();
-        } else {
-            loaderFragment.setUrl(account.getUrl());
-            loaderFragment.setToken(account.getToken());
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        if(!isOnceDataLoaded) {
-            loadData();
-        }
+        invalidateOptionsMenu();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.account_info, menu);
-        menu.findItem(R.id.account_info_refresh).setEnabled(!loaderFragment.isLoading());
+
+        Fragment fragment = fragments.get(viewPager.getCurrentItem());
+        if(fragment instanceof RPCDataPresenterFragment) {
+            RPCDataPresenterFragment dataPresenterFragment = (RPCDataPresenterFragment)fragment;
+            menu.findItem(R.id.account_info_refresh).setEnabled(!dataPresenterFragment.isLoading());
+        } else {
+            menu.findItem(R.id.account_info_refresh).setVisible(false);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -170,7 +161,11 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         boolean result = true;
         switch (item.getItemId()) {
             case R.id.account_info_refresh:
-                loadData();
+                Fragment fragment = fragments.get(viewPager.getCurrentItem());
+                if(fragment instanceof RPCDataPresenterFragment) {
+                    ((RPCDataPresenterFragment)fragment).refreshData();
+                    Toast.makeText(this, R.string.message_refreshing, Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.account_info_exit:
                 exitAccount();
@@ -185,19 +180,7 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(IS_ONCE_DATA_LOADED_KEY, isOnceDataLoaded);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        isOnceDataLoaded = savedInstanceState.getBoolean(IS_ONCE_DATA_LOADED_KEY, isOnceDataLoaded);
-    }
-
-    private void loadData() {
-        if(!loaderFragment.isLoading() && IOUtils.isNetworkAvailable(this, true)) {
-            loaderFragment.load(RPC.Method.GET_USER_STATUS, RPC.Method.GET_USER_WORKERS, RPC.Method.GET_POOL_STATUS);
-        }
+        outState.putInt(SYNC_LOADERS_BUNDLE_KEY, syncLoaders);
     }
 
     private void exitAccount() {
@@ -208,62 +191,35 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
     }
 
     @Override
-    public void onDataLoadStarted() {
-        if(!isOnceDataLoaded) {
-            ProgressDialogFragment pdf = new ProgressDialogFragment();
-            pdf.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
-        } else {
-            Toast.makeText(this, R.string.message_refreshing, Toast.LENGTH_SHORT).show();
+    public Account getAccount() {
+        return account;
+    }
+
+    @Override
+    public void onSynchronousLoadStarted() {
+        if(syncLoaders++ == 0) {
+            ProgressDialogFragment progressDialogFragment = new ProgressDialogFragment();
+            progressDialogFragment.show(getSupportFragmentManager(), ProgressDialogFragment.FRAGMENT_TAG);
         }
+    }
+
+    @Override
+    public void onSynchronousLoadFinished() {
+        if(--syncLoaders == 0) {
+            ProgressDialogFragment progressDialogFragment = (ProgressDialogFragment)getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.FRAGMENT_TAG);
+            if(progressDialogFragment != null) {
+                progressDialogFragment.dismiss();
+            }
+        }
+    }
+
+    @Override
+    public void onLoadStarted() {
         invalidateOptionsMenu();
     }
 
     @Override
-    public void onDataLoadFinished(Map<RPC.Method, RPC.RPCResult> results) {
-        ProgressDialogFragment pdf = (ProgressDialogFragment)getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.FRAGMENT_TAG);
-        if(pdf != null) {
-            pdf.dismiss();
-        }
-
-        isOnceDataLoaded = true;
+    public void onLoadFinished() {
         invalidateOptionsMenu();
-
-        int failedResults = 0;
-        for(RPC.RPCResult r : results.values()) {
-            if(r.error != null || r.result == null) {
-                failedResults++;
-            }
-        }
-
-        if(failedResults < results.size()) {
-            DashboardFragment.DashboardState dashboardState = new DashboardFragment.DashboardState();
-
-            RPC.RPCResult result = results.get(RPC.Method.GET_USER_STATUS);
-            if(result.error == null && result.result != null) {
-                GetUserStatusResult userStatusResult = (GetUserStatusResult)result.result;
-                dashboardState.setYourHashrate(userStatusResult.getHashrate());
-                dashboardState.setYourSharerate(userStatusResult.getSharerate());
-
-                GetUserStatusResult.Transactions transactions = userStatusResult.getTransactions();
-                dashboardState.setConfirmedBalance(transactions.getCredit() - transactions.getDebit() - transactions.getManualDebit() - transactions.getDonation() - transactions.getTxFee());
-                dashboardState.setUnconfirmedBalanceAvailable(false);
-            }
-
-            result = results.get(RPC.Method.GET_POOL_STATUS);
-            if(result.error == null && result.result != null) {
-                GetPoolStatusResult poolStatusResult = (GetPoolStatusResult)result.result;
-                dashboardState.setPoolHashrate(poolStatusResult.getHashrate() / 1e6F);
-                dashboardState.setNetHashrate(poolStatusResult.getNetHashRate() / 1e9F);
-            }
-
-            DashboardFragment dashboardFragment = (DashboardFragment)fragments.get(Page.DASHBOARD.ordinal());
-            dashboardFragment.setState(dashboardState);
-
-            if(failedResults > 0) {
-                Toast.makeText(this, R.string.error_partially_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, R.string.error_failed_to_load_try_again, Toast.LENGTH_SHORT).show();
-        }
     }
 }

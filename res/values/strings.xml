@@ -35,6 +35,23 @@
     <string name="dashboard_balance_confirmed">Confirmed:</string>
     <string name="dashboard_balance_unconfirmed">Unconfirmed:</string>
 
+    <!-- workers -->
+    <string name="worker_username">Username:</string>
+    <string name="worker_password">Password:</string>
+    <string name="worker_difficulty">Difficulty:</string>
+    <string name="worker_hashrate">Hashrate:</string>
+
+    <!-- general stats -->
+    <string name="gen_stats_pool_hashrate">Pool Hash Rate</string>
+    <string name="gen_stats_pool_efficiency">Pool Efficiency</string>
+    <string name="gen_stats_active_workers">Current Active Workers</string>
+    <string name="gen_stats_next_block">Next Network Block</string>
+    <string name="gen_stats_last_block_found">Last Block Found</string>
+    <string name="gen_stats_est_avg_time_per_round_net">Est. Avg. Time Per Round (Network)</string>
+    <string name="gen_stats_est_avg_time_per_round_pool">Est. Avg. Time Per Round (Pool)</string>
+    <string name="gen_stats_est_shares_this_round">Est. Shares This Round</string>
+    <string name="gen_stats_time_since_last_block">Time Since Last Block</string>
+
     <!-- common errors -->
     <string name="error_network_unavailable">Internet is currently unavailable. Please turn it on and try again.</string>
     <string name="error_failed_to_load_try_again">Failed to load data. Please try again later.</string>
@@ -49,4 +66,8 @@
     <string name="measure_khash_per_s">kH/s</string>
     <string name="measure_ghash_per_s">GH/s</string>
     <string name="measure_share_per_s">share/s</string>
+
+    <!-- formats -->
+    <string name="format_time_secs">%0$d sec</string>
+    <string name="format_time_mins_secs">%0$d min %1$d sec</string>
 </resources>

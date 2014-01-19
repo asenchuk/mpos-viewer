@@ -1,12 +1,14 @@
-package net.taviscaron.mposviewer.rpc.model;
+package net.taviscaron.mposviewer.model;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Worker json obj
  * @author Andrei Senchuk
  */
-public class Worker {
+public class Worker implements Serializable {
     @SerializedName("id")
     private int id;
 

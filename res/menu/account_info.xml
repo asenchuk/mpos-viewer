@@ -6,8 +6,8 @@
             android:title="@string/account_info_action_refresh"
             android:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/account_info_exit"
-        android:icon="@drawable/ic_action_exit"
-        android:title="@string/account_info_action_exit"
-        android:showAsAction="ifRoom"/>
+            android:id="@+id/account_info_exit"
+            android:icon="@drawable/ic_action_exit"
+            android:title="@string/account_info_action_exit"
+            android:showAsAction="ifRoom"/>
 </menu>

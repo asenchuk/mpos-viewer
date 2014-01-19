@@ -1,20 +1,24 @@
 package net.taviscaron.mposviewer.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import net.taviscaron.mposviewer.R;
+import net.taviscaron.mposviewer.rpc.RPC;
+import net.taviscaron.mposviewer.rpc.result.GetPoolStatusResult;
+import net.taviscaron.mposviewer.rpc.result.GetUserBalanceResult;
+import net.taviscaron.mposviewer.rpc.result.GetUserStatusResult;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Dashboard fragment
  * @author Andrei Senchuk
  */
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends RPCDataPresenterFragment {
     private static final String DASHBOARD_STATE_KEY = "dashboardState";
 
     public static class DashboardState implements Serializable {
@@ -24,63 +28,6 @@ public class DashboardFragment extends Fragment {
         private float yourSharerate;
         private double confirmedBalance;
         private double unconfirmedBalance;
-        private boolean isUnconfirmedBalanceAvailable;
-
-        public float getPoolHashrate() {
-            return poolHashrate;
-        }
-
-        public void setPoolHashrate(float poolHashrate) {
-            this.poolHashrate = poolHashrate;
-        }
-
-        public float getNetHashrate() {
-            return netHashrate;
-        }
-
-        public void setNetHashrate(float netHashrate) {
-            this.netHashrate = netHashrate;
-        }
-
-        public float getYourHashrate() {
-            return yourHashrate;
-        }
-
-        public void setYourHashrate(float yourHashrate) {
-            this.yourHashrate = yourHashrate;
-        }
-
-        public float getYourSharerate() {
-            return yourSharerate;
-        }
-
-        public void setYourSharerate(float yourSharerate) {
-            this.yourSharerate = yourSharerate;
-        }
-
-        public double getConfirmedBalance() {
-            return confirmedBalance;
-        }
-
-        public void setConfirmedBalance(double confirmedBalance) {
-            this.confirmedBalance = confirmedBalance;
-        }
-
-        public double getUnconfirmedBalance() {
-            return unconfirmedBalance;
-        }
-
-        public void setUnconfirmedBalance(double unconfirmedBalance) {
-            this.unconfirmedBalance = unconfirmedBalance;
-        }
-
-        public boolean isUnconfirmedBalanceAvailable() {
-            return isUnconfirmedBalanceAvailable;
-        }
-
-        public void setUnconfirmedBalanceAvailable(boolean isUnconfirmedBalanceAvailable) {
-            this.isUnconfirmedBalanceAvailable = isUnconfirmedBalanceAvailable;
-        }
     }
 
     private TextView yourHashrateTextView;
@@ -91,10 +38,14 @@ public class DashboardFragment extends Fragment {
     private TextView unconfirmedBalanceTextView;
     private DashboardState state;
 
+    public DashboardFragment() {
+        super(RPC.Method.GET_USER_BALANCE, RPC.Method.GET_USER_STATUS, RPC.Method.GET_POOL_STATUS);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-setRetainInstance(true);
+
         if(savedInstanceState != null) {
             state = (DashboardState)savedInstanceState.getSerializable(DASHBOARD_STATE_KEY);
         }
@@ -121,12 +72,12 @@ setRetainInstance(true);
 
     private void updateViews() {
         if(state != null) {
-            yourHashrateTextView.setText(String.format("%.0f", state.getYourHashrate()));
-            yourSharerateTextView.setText(String.format("%.2f", state.getYourSharerate()));
-            poolHashrateTextView.setText(String.format("%.2f", state.getPoolHashrate()));
-            netHashrateTextView.setText(String.format("%.2f", state.getNetHashrate()));
-            confirmedBalanceTextView.setText(String.format("%.8f", state.getConfirmedBalance()));
-            unconfirmedBalanceTextView.setText((state.isUnconfirmedBalanceAvailable()) ? String.format("%.8f", state.getUnconfirmedBalance()) : "-");
+            yourHashrateTextView.setText(String.format("%.0f", state.yourHashrate));
+            yourSharerateTextView.setText(String.format("%.2f", state.yourSharerate));
+            poolHashrateTextView.setText(String.format("%.2f", state.poolHashrate));
+            netHashrateTextView.setText(String.format("%.2f", state.netHashrate));
+            confirmedBalanceTextView.setText(String.format("%.8f", state.confirmedBalance));
+            unconfirmedBalanceTextView.setText(String.format("%.8f", state.unconfirmedBalance));
         } else {
             yourHashrateTextView.setText("-");
             yourSharerateTextView.setText("-");
@@ -137,12 +88,36 @@ setRetainInstance(true);
         }
     }
 
-    public DashboardState getState() {
-        return state;
+    @Override
+    protected boolean hasData() {
+        return (state != null);
     }
 
-    public void setState(DashboardState state) {
-        this.state = state;
+    @Override
+    protected void onLoadFinished(Map<RPC.Method, RPC.RPCResult> results) {
+        state = new DashboardState();
+
+        RPC.RPCResult result = results.get(RPC.Method.GET_USER_STATUS);
+        if(result.error == null && result.result != null) {
+            GetUserStatusResult userStatusResult = (GetUserStatusResult)result.result;
+            state.yourHashrate = userStatusResult.getHashrate();
+            state.yourSharerate = userStatusResult.getSharerate();
+        }
+
+        result = results.get(RPC.Method.GET_POOL_STATUS);
+        if(result.error == null && result.result != null) {
+            GetPoolStatusResult poolStatusResult = (GetPoolStatusResult)result.result;
+            state.poolHashrate = poolStatusResult.getHashrate() / 1e6F;
+            state.netHashrate = poolStatusResult.getNetHashRate() / 1e9F;
+        }
+
+        result = results.get(RPC.Method.GET_USER_BALANCE);
+        if(result.error == null && result.result != null) {
+            GetUserBalanceResult userBalanceResult = (GetUserBalanceResult)result.result;
+            state.confirmedBalance = userBalanceResult.getConfirmed();
+            state.unconfirmedBalance = userBalanceResult.getUnconfirmed();
+        }
+
         updateViews();
     }
 }

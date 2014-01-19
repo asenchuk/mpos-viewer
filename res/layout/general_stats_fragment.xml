@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:padding="10dp">
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@drawable/bg_info_block">
+
+        <!-- POOL HASH RATE -->
+        <TextView
+                android:id="@+id/gen_stats_pool_hashrate_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gen_stats_pool_hashrate"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_pool_hashrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/gen_stats_pool_hashrate_label"
+                android:layout_alignParentRight="true"/>
+
+        <!-- POOL EFFICIENCY -->
+        <TextView
+                android:id="@+id/gen_stats_pool_efficiency_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gen_stats_pool_hashrate_label"
+                android:text="@string/gen_stats_pool_efficiency"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_pool_efficiency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/gen_stats_pool_efficiency_label"
+                android:layout_alignParentRight="true"/>
+
+        <!-- CURRENT ACTIVE WORKERS -->
+        <TextView
+                android:id="@+id/gen_stats_active_workers_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gen_stats_pool_efficiency_label"
+                android:text="@string/gen_stats_active_workers"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_active_workers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/gen_stats_active_workers_label"
+                android:layout_alignParentRight="true"/>
+
+        <!-- NEXT NETWORK BLOCK -->
+        <TextView
+                android:id="@+id/gen_stats_next_block_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gen_stats_active_workers_label"
+                android:text="@string/gen_stats_next_block"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_next_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/gen_stats_next_block_label"
+                android:layout_alignParentRight="true"/>
+
+        <!-- LAST BLOCK FOUND -->
+        <TextView
+                android:id="@+id/gen_stats_last_block_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gen_stats_next_block_label"
+                android:text="@string/gen_stats_last_block_found"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_last_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/gen_stats_last_block_label"
+                android:layout_alignParentRight="true"/>
+
+        <!-- EST AVG TIME PER ROUND (POOL) -->
+        <TextView
+                android:id="@+id/gen_stats_est_avg_round_time_pool_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gen_stats_last_block_label"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/gen_stats_est_avg_round_time_pool"
+                android:text="@string/gen_stats_est_avg_time_per_round_pool"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_est_avg_round_time_pool"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/gen_stats_est_avg_round_time_pool_label"
+                android:layout_alignParentRight="true"/>
+
+        <!-- EST SHARES -->
+        <TextView
+                android:id="@+id/gen_stats_est_shares_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gen_stats_est_avg_round_time_pool_label"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/gen_stats_est_shares"
+                android:text="@string/gen_stats_est_shares_this_round"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_est_shares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/gen_stats_est_shares_label"
+                android:layout_alignParentRight="true"/>
+
+        <!-- TIME SINCE LAST BLOCK -->
+        <TextView
+                android:id="@+id/gen_stats_time_since_last_block_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gen_stats_est_shares_label"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/gen_stats_time_since_last_block"
+                android:text="@string/gen_stats_time_since_last_block"
+                style="@style/GeneralStatsAttributeName"/>
+
+        <TextView
+                android:id="@+id/gen_stats_time_since_last_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/gen_stats_time_since_last_block_label"
+                android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

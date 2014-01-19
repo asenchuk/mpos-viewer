@@ -25,6 +25,14 @@ public class GetPublicResult {
     @SerializedName("last_block")
     private int lastBlock;
 
+    public int getLastBlock() {
+        return lastBlock;
+    }
+
+    public void setLastBlock(int lastBlock) {
+        this.lastBlock = lastBlock;
+    }
+
     public String getPoolName() {
         return poolName;
     }
