@@ -68,6 +68,6 @@
     <string name="measure_share_per_s">share/s</string>
 
     <!-- formats -->
-    <string name="format_time_secs">%0$d sec</string>
-    <string name="format_time_mins_secs">%0$d min %1$d sec</string>
+    <string name="format_time_secs">%d sec</string>
+    <string name="format_time_mins_secs" formatted="false">%d min %d sec</string>
 </resources>
