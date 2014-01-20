@@ -201,9 +201,10 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
     @Override
     public void onSynchronousLoadFinished() {
         if(--syncLoaders == 0) {
-            ProgressDialogFragment progressDialogFragment = (ProgressDialogFragment)getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.FRAGMENT_TAG);
+            FragmentManager fm = getSupportFragmentManager();
+            ProgressDialogFragment progressDialogFragment = (ProgressDialogFragment)fm.findFragmentByTag(ProgressDialogFragment.FRAGMENT_TAG);
             if(progressDialogFragment != null) {
-                progressDialogFragment.dismiss();
+                fm.beginTransaction().remove(progressDialogFragment).commitAllowingStateLoss();
             }
         }
     }

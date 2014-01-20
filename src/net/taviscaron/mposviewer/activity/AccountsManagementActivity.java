@@ -188,9 +188,10 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
 
     @Override
     public void onAccountAddingFinished(AccountAddFragment.Result result) {
+        FragmentManager fm = getSupportFragmentManager();
         ProgressDialogFragment pdf = (ProgressDialogFragment)getSupportFragmentManager().findFragmentByTag(PROGRESS_DIALOG_FRAGMENT_TAG);
         if(pdf != null) {
-            pdf.dismiss();
+            fm.beginTransaction().remove(pdf).commitAllowingStateLoss();
         } else {
             Log.w(TAG, "WTF? Progress dialog should be showed.");
         }
