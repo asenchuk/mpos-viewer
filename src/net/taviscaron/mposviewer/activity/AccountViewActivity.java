@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
@@ -66,7 +65,7 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         }
     };
 
-    private final SparseArray<Fragment> fragments = new SparseArray<Fragment>(Page.values().length);
+    private final Fragment[] fragments = new Fragment[Page.values().length];
     private ViewPager viewPager;
     private Account account;
     private int syncLoaders;
@@ -90,9 +89,15 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
             @Override
             public Fragment instantiateItem(ViewGroup container, int position) {
                 Fragment fragment = (Fragment)super.instantiateItem(container, position);
-                fragments.put(position, fragment);
+                fragments[position] = fragment;
                 invalidateOptionsMenu();
                 return fragment;
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                super.destroyItem(container, position, object);
+                fragments[position] = null;
             }
 
             @Override
@@ -140,7 +145,7 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.account_info, menu);
 
-        Fragment fragment = fragments.get(viewPager.getCurrentItem());
+        Fragment fragment = fragments[viewPager.getCurrentItem()];
         if(fragment instanceof RPCDataPresenterFragment) {
             RPCDataPresenterFragment dataPresenterFragment = (RPCDataPresenterFragment)fragment;
             menu.findItem(R.id.account_info_refresh).setEnabled(!dataPresenterFragment.isLoading());
@@ -156,11 +161,7 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         boolean result = true;
         switch (item.getItemId()) {
             case R.id.account_info_refresh:
-                Fragment fragment = fragments.get(viewPager.getCurrentItem());
-                if(fragment instanceof RPCDataPresenterFragment) {
-                    ((RPCDataPresenterFragment)fragment).refreshData();
-                    Toast.makeText(this, R.string.message_refreshing, Toast.LENGTH_LONG).show();
-                }
+                refreshAll();
                 break;
             case R.id.account_info_exit:
                 exitAccount();
@@ -176,6 +177,21 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SYNC_LOADERS_BUNDLE_KEY, syncLoaders);
+    }
+
+    private void refreshAll() {
+        boolean refreshing = false;
+
+        for(Fragment fragment : fragments) {
+            if(fragment instanceof RPCDataPresenterFragment) {
+                ((RPCDataPresenterFragment)fragment).refreshData();
+                refreshing = true;
+            }
+        }
+
+        if(refreshing) {
+            Toast.makeText(this, R.string.message_refreshing, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void exitAccount() {
