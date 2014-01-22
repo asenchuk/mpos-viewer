@@ -12,6 +12,7 @@ import net.taviscaron.mposviewer.R;
 import net.taviscaron.mposviewer.rpc.RPC;
 import net.taviscaron.mposviewer.model.Worker;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -71,7 +72,10 @@ public class WorkersFragment extends RPCDataPresenterFragment {
         super.onCreate(savedInstanceState);
 
         if(savedInstanceState != null) {
-            workers = (Worker[])savedInstanceState.getSerializable(WORKERS_BUNDLE_KEY);
+            Object[] workersObj = (Object[])savedInstanceState.getSerializable(WORKERS_BUNDLE_KEY);
+            if(workersObj != null) {
+                workers = Arrays.copyOf(workersObj, workersObj.length, Worker[].class);
+            }
         }
     }
 
