@@ -17,7 +17,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        long id = sp.getLong(Constants.CURRENT_ACCOUNT_ID_PREF_KEY, -1);
+
+        // id type changed from int to long so this code is for automated migration
+        long id = -1;
+        try {
+            id = sp.getLong(Constants.CURRENT_ACCOUNT_ID_PREF_KEY, -1);
+        } catch(ClassCastException e) {
+            Object obj = sp.getAll().get(Constants.CURRENT_ACCOUNT_ID_PREF_KEY);
+            if(obj instanceof Integer) {
+                id = (Integer)obj;
+                sp.edit().putLong(Constants.CURRENT_ACCOUNT_ID_PREF_KEY, id).commit();
+            }
+        }
 
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
