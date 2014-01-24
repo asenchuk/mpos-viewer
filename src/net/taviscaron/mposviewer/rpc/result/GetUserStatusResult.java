@@ -28,7 +28,7 @@ public class GetUserStatusResult {
 
     private String username;
     private Shares shares;
-    private int hashrate;
+    private float hashrate;
     private float sharerate;
 
     public String getUsername() {
@@ -47,11 +47,11 @@ public class GetUserStatusResult {
         this.shares = shares;
     }
 
-    public int getHashrate() {
+    public float getHashrate() {
         return hashrate;
     }
 
-    public void setHashrate(int hashrate) {
+    public void setHashrate(float hashrate) {
         this.hashrate = hashrate;
     }
 
