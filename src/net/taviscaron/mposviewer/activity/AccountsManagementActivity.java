@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -59,10 +60,19 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
 
         ListView listView = (ListView)findViewById(R.id.accounts_management_list);
         listView.setAdapter(listAdapter);
+        registerForContextMenu(listView);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                onPoolSelected((int)id);
+                onPoolSelected(id);
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                return false;
             }
         });
 
@@ -103,6 +113,26 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
     }
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.accounts_management_list_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(android.view.MenuItem item) {
+        boolean result = true;
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.accounts_management_remove:
+                removePool((int)info.id);
+            default:
+                result = super.onContextItemSelected(item);
+                break;
+        }
+        return result;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.accounts_management, menu);
         return super.onCreateOptionsMenu(menu);
@@ -140,9 +170,14 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
         }
     }
 
-    private void onPoolSelected(int id) {
+    private void removePool(long id) {
+        dbHelper.removeAccount(id);
+        refreshAccounts();
+    }
+
+    private void onPoolSelected(long id) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        sp.edit().putInt(Constants.CURRENT_ACCOUNT_ID_PREF_KEY, id).commit();
+        sp.edit().putLong(Constants.CURRENT_ACCOUNT_ID_PREF_KEY, id).commit();
 
         Intent intent = new Intent(this, AccountViewActivity.class);
         intent.putExtra(AccountViewActivity.ACCOUNT_ID_KEY, id);

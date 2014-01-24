@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        int id = sp.getInt(Constants.CURRENT_ACCOUNT_ID_PREF_KEY, -1);
+        long id = sp.getLong(Constants.CURRENT_ACCOUNT_ID_PREF_KEY, -1);
 
         Intent intent = new Intent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

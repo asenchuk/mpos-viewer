@@ -8,6 +8,7 @@
 
     <!-- accounts management -->
     <string name="accounts_management_action_add">Add</string>
+    <string name="accounts_management_context_action_remove">Remove</string>
     <string name="accounts_management_unknown_qr_toast">Scanned code doesn\'t contain any MPOS account</string>
     <string name="accounts_management_account_already_added">The account is already added</string>
     <string name="accounts_management_account_added">Account successfully added</string>

@@ -123,10 +123,10 @@ public class AccountViewActivity extends SherlockFragmentActivity implements RPC
         super.onStart();
 
         // getting args
-        int accountId = -1;
+        long accountId = -1;
 
         Intent intent = getIntent();
-        if(intent == null || (accountId = intent.getIntExtra(ACCOUNT_ID_KEY, -1)) == -1) {
+        if(intent == null || (accountId = intent.getLongExtra(ACCOUNT_ID_KEY, -1)) == -1) {
             throw new RuntimeException(getClass().getCanonicalName() + " activity should be started with '" + ACCOUNT_ID_KEY + "' intent extra");
         }
 

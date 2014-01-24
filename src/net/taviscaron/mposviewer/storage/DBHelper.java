@@ -47,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public synchronized Account findAccountById(int id) {
+    public synchronized Account findAccountById(long id) {
         Account account = null;
         Cursor cursor = getReadableDatabase().query(Account.TABLE_NAME, null, String.format("%s = %d", BaseColumns._ID, id), null, null, null, null);
         if(cursor.moveToNext()) {
@@ -74,5 +74,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public synchronized void addAccount(Account account) {
         getWritableDatabase().insert(Account.TABLE_NAME, null, account.toContentValues());
+    }
+
+    public synchronized void removeAccount(long id) {
+        getWritableDatabase().delete(Account.TABLE_NAME, String.format("%s = %d", BaseColumns._ID, id), null);
     }
 }
