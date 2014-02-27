@@ -15,6 +15,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,6 +38,7 @@ public class RPC {
 
     private static final String METHOD_ATTR_NAME = "action";
     private static final String TOKEN_ATTR_NAME = "api_key";
+    private static final int DEFAULT_TIMEOUT = 30 * 1000;
 
     /** supported RPC methods */
     public enum Method {
@@ -93,6 +96,12 @@ public class RPC {
     private String url;
     private final HttpClient httpClient = new DefaultHttpClient();
     private final Gson gson = new GsonBuilder().create();
+
+    public RPC() {
+        HttpParams params = httpClient.getParams();
+        HttpConnectionParams.setConnectionTimeout(params, DEFAULT_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(params, DEFAULT_TIMEOUT);
+    }
 
     public String getToken() {
         return token;
