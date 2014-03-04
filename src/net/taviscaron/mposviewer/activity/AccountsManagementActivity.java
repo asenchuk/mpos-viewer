@@ -187,7 +187,7 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
     }
 
     private void addAccountFromStringCode(String code) {
-        Matcher matcher = Pattern.compile("^\\|(.+)\\|([a-f0-9]+)\\|(\\d+)\\|$").matcher(code);
+        Matcher matcher = Pattern.compile("^\\|(.+)\\|([a-f0-9]+)\\|(\\d+)\\|(.*?\\|)*$").matcher(code);
         if(matcher.find()) {
             String url = matcher.group(1);
             String token = matcher.group(2);
