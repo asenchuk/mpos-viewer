@@ -187,14 +187,18 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
     }
 
     private void addAccountFromStringCode(String code) {
-        Matcher matcher = Pattern.compile("^\\|(.+)\\|([a-f0-9]+)\\|(\\d+)\\|(.*?\\|)*$").matcher(code);
+        Matcher matcher = Pattern.compile("^\\|(.+)\\|([a-f0-9]+)\\|(\\d+)\\|([^\\|]*)*\\|?$").matcher(code);
         if(matcher.find()) {
+            String coin = "";
             String url = matcher.group(1);
             String token = matcher.group(2);
             int userId = Integer.parseInt(matcher.group(3));
+            if (matcher.groupCount == 4) {
+                coin = matcher.group(4);
+            }
 
             if(IOUtils.isNetworkAvailable(this, true)) {
-                fragment.addAccount(url, token, userId);
+                fragment.addAccount(url, token, userId, coin);
             }
         } else {
             Toast.makeText(this, R.string.accounts_management_unknown_qr_toast, Toast.LENGTH_SHORT).show();
