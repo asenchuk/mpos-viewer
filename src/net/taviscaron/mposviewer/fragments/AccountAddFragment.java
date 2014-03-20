@@ -51,9 +51,7 @@ public class AccountAddFragment extends Fragment {
         account.setUrl(url);
         account.setToken(token);
         account.setUserId(userId);
-        if (coin != null) {
-            account.setCoin(coin);
-        }
+        account.setCoin(coin);
         new AccountInitTask().execute(account);
     }
 
