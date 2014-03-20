@@ -18,6 +18,7 @@ public class Account implements Serializable {
     public static final String USER_ID_ATTR = "user_id";
     public static final String TOKEN_ATTR = "token";
     public static final String URL_ATTR = "url";
+    public static final String COIN_ATTR = "coin";
 
     private int id;
     private String poolName;
@@ -25,6 +26,7 @@ public class Account implements Serializable {
     private int userId;
     private String token;
     private String url;
+    private String coin;
 
     public Account() {
         // default constructor
@@ -37,6 +39,7 @@ public class Account implements Serializable {
         userId = DBUtils.getInt(cursor, USER_ID_ATTR);
         token = DBUtils.getString(cursor, TOKEN_ATTR);
         url = DBUtils.getString(cursor, URL_ATTR);
+        coin = DBUtils.getString(cursor, COIN_ATTR);
     }
 
     public int getId() {
@@ -87,6 +90,10 @@ public class Account implements Serializable {
         this.url = url;
     }
 
+    public String getCoin() { return coin; }
+
+    public void setCoin(String coin) { this.coin = coin; }
+
     public ContentValues toContentValues() {
         ContentValues cv = new ContentValues();
         cv.put(POOL_NAME_ATTR, poolName);
@@ -94,6 +101,7 @@ public class Account implements Serializable {
         cv.put(USER_ID_ATTR, userId);
         cv.put(TOKEN_ATTR, token);
         cv.put(URL_ATTR, url);
+        cv.put(COIN_ATTR, coin);
         return cv;
     }
 }

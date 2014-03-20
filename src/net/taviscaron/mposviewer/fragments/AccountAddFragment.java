@@ -46,11 +46,12 @@ public class AccountAddFragment extends Fragment {
         listener = null;
     }
 
-    public void addAccount(String url, String token, int userId) {
+    public void addAccount(String url, String token, int userId, String coin) {
         Account account = new Account();
         account.setUrl(url);
         account.setToken(token);
         account.setUserId(userId);
+        account.setCoin(coin);
         new AccountInitTask().execute(account);
     }
 
@@ -70,10 +71,11 @@ public class AccountAddFragment extends Fragment {
                     return Result.ALREADY_EXISTS;
                 }
 
-                // init RPC; token and url is required
+                // init RPC; token and url is required; coin is sometimes required
                 RPC rpc = new RPC();
                 rpc.setUrl(account.getUrl());
                 rpc.setToken(account.getToken());
+                rpc.setCoin(account.getCoin());
 
                 // stage #1 - pool name getting
                 RPC.RPCResult rpcResult = rpc.call(RPC.Method.GET_PUBLIC);
