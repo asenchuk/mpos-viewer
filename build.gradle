@@ -16,6 +16,25 @@ apply plugin: 'android'
 android {
     compileSdkVersion 19
     buildToolsVersion '19.0.1'
+
+    // signing
+    def keyStore = System.getenv('KEY_STORE');
+    if(keyStore != null) {
+        signingConfigs {
+            release {
+                storeFile file(keyStore)
+                storePassword System.getenv('KEY_STORE_PASSWORD')
+                keyAlias System.getenv('KEY_ALIAS')
+                keyPassword System.getenv('KEY_ALIAS_PASSWORD')
+            }
+        }
+
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
 }
 
 dependencies {
