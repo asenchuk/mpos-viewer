@@ -10,7 +10,7 @@ public class GetPoolStatusResult {
     @SerializedName("pool_name")
     private String poolName;
 
-    private long hashrate;
+    private float hashrate;
     private float efficiency;
     private int workers;
     private int currentnetworkblock;
@@ -40,11 +40,11 @@ public class GetPoolStatusResult {
         this.poolName = poolName;
     }
 
-    public long getHashrate() {
+    public float getHashrate() {
         return hashrate;
     }
 
-    public void setHashrate(long hashrate) {
+    public void setHashrate(float hashrate) {
         this.hashrate = hashrate;
     }
 

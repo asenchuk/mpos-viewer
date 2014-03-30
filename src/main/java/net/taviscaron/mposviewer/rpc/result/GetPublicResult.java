@@ -11,7 +11,7 @@ public class GetPublicResult {
     private String poolName;
 
     @SerializedName("hashrate")
-    private long hashrate;
+    private float hashrate;
 
     @SerializedName("network_hashrate")
     private long networkHashrate;
@@ -41,11 +41,11 @@ public class GetPublicResult {
         this.poolName = poolName;
     }
 
-    public long getHashrate() {
+    public float getHashrate() {
         return hashrate;
     }
 
-    public void setHashrate(long hashrate) {
+    public void setHashrate(float hashrate) {
         this.hashrate = hashrate;
     }
 

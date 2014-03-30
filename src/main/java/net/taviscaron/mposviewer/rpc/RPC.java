@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import net.taviscaron.mposviewer.model.Worker;
 import net.taviscaron.mposviewer.rpc.result.GetPoolStatusResult;
 import net.taviscaron.mposviewer.rpc.result.GetPublicResult;
@@ -247,6 +248,9 @@ public class RPC {
             Log.w(TAG, "bad io", e);
             error = Error.BAD_IO;
         } catch (JSONException e) {
+            Log.w(TAG, "bad json", e);
+            error = Error.BAD_RESPONSE;
+        } catch (JsonParseException e) {
             Log.w(TAG, "bad json", e);
             error = Error.BAD_RESPONSE;
         } finally {
