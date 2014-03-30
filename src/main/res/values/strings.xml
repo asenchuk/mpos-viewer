@@ -67,5 +67,5 @@
 
     <!-- formats -->
     <string name="format_time_secs">%d sec</string>
-    <string name="format_time_mins_secs" formatted="false">%d min %d sec</string>
+    <string name="format_time_mins_secs">%1$d min %2$d sec</string>
 </resources>
