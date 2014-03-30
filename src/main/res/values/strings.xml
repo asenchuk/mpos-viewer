@@ -18,9 +18,6 @@
     <string name="account_info_tab_dashboard">Dashboard</string>
     <string name="account_info_tab_workers">Workers</string>
     <string name="account_info_tab_general_stats">General stats</string>
-    <string name="account_info_tab_last_blocks">Last blocks</string>
-    <string name="account_info_tab_user_hashrates">User hash rates</string>
-    <string name="account_info_tab_user_shares">User share rates</string>
 
     <!-- account info -->
     <string name="account_info_action_refresh">Refresh</string>
@@ -49,7 +46,6 @@
     <string name="gen_stats_next_block">Next Network Block</string>
     <string name="gen_stats_last_block_found">Last Block Found</string>
     <string name="gen_stats_difficulty">Difficulty</string>
-    <string name="gen_stats_est_avg_time_per_round_net">Est. Avg. Time Per Round (Network)</string>
     <string name="gen_stats_est_avg_time_per_round_pool">Est. Avg. Time Per Round (Pool)</string>
     <string name="gen_stats_est_shares_this_round">Est. Shares This Round</string>
     <string name="gen_stats_time_since_last_block">Time Since Last Block</string>
