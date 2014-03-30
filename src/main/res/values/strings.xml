@@ -60,9 +60,9 @@
     <string name="error_partially_failed_to_load_try_again">Data has been loaded partially due to unknown network or server issues. Please try again later.</string>
 
     <!-- common messages -->
-    <string name="message_loading_please_wait_title">Loading...</string>
+    <string name="message_loading_please_wait_title">Loading&#8230;</string>
     <string name="message_loading_please_wait_body">Please wait.</string>
-    <string name="message_refreshing">Refreshing...</string>
+    <string name="message_refreshing">Refreshing&#8230;</string>
 
     <!-- measures -->
     <string name="measure_khash_per_s">kH/s</string>
