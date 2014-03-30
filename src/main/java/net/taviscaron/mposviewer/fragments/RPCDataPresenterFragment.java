@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * RPC Data presenter fragment
  * @author Andrei Senchuk
  */
-public class RPCDataPresenterFragment extends Fragment {
+public abstract class RPCDataPresenterFragment extends Fragment {
     private static final String TAG = "RPCDataPresenterFragment";
 
     public interface RPCDataAccountProvider {
