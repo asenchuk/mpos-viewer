@@ -39,7 +39,6 @@ public class RPC {
 
     private static final String METHOD_ATTR_NAME = "action";
     private static final String TOKEN_ATTR_NAME = "api_key";
-    private static final int DEFAULT_TIMEOUT = 30 * 1000;
 
     /** supported RPC methods */
     public enum Method {
@@ -95,13 +94,11 @@ public class RPC {
 
     private String token;
     private String url;
-    private final HttpClient httpClient = new DefaultHttpClient();
+    private final HttpClient httpClient;
     private final Gson gson = new GsonBuilder().create();
 
-    public RPC() {
-        HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setConnectionTimeout(params, DEFAULT_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, DEFAULT_TIMEOUT);
+    public RPC(HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     public String getToken() {

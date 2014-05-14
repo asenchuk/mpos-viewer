@@ -5,4 +5,10 @@
             android:icon="@drawable/ic_action_new"
             android:title="@string/accounts_management_action_add"
             android:showAsAction="ifRoom"/>
+
+    <item
+            android:id="@+id/accounts_management_settings"
+            android:icon="@drawable/ic_action_action_settings"
+            android:title="@string/accounts_management_action_settings"
+            android:showAsAction="ifRoom"/>
 </menu>

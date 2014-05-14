@@ -8,6 +8,7 @@ import android.widget.Toast;
 import net.taviscaron.mposviewer.R;
 import net.taviscaron.mposviewer.model.Account;
 import net.taviscaron.mposviewer.rpc.RPC;
+import net.taviscaron.mposviewer.rpc.RPCFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -167,7 +168,7 @@ public abstract class RPCDataPresenterFragment extends Fragment {
 
             @Override
             protected Map<RPC.Method, RPC.RPCResult> doInBackground(RPC.Method... methods) {
-                RPC rpc = new RPC();
+                RPC rpc = RPCFactory.createRPC(getActivity());
                 rpc.setUrl(finalAccount.getUrl());
                 rpc.setToken(finalAccount.getToken());
 

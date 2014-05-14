@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import net.taviscaron.mposviewer.model.Account;
+import net.taviscaron.mposviewer.rpc.RPCFactory;
 import net.taviscaron.mposviewer.rpc.result.GetPublicResult;
 import net.taviscaron.mposviewer.rpc.result.GetUserStatusResult;
 import net.taviscaron.mposviewer.rpc.RPC;
@@ -71,7 +72,7 @@ public class AccountAddFragment extends Fragment {
                 }
 
                 // init RPC; token and url is required
-                RPC rpc = new RPC();
+                RPC rpc = RPCFactory.createRPC(getActivity());
                 rpc.setUrl(account.getUrl());
                 rpc.setToken(account.getToken());
 

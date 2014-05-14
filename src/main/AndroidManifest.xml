@@ -19,5 +19,6 @@
 
         <activity android:name=".activity.AccountsManagementActivity" android:label="@string/account_management_activity_title" />
         <activity android:name=".activity.AccountViewActivity" android:label="@string/account_view_activity_title" />
+        <activity android:name=".activity.SettingsActivity" android:label="@string/settings_activity_title" />
     </application>
 </manifest>

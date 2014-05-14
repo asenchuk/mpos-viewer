@@ -5,9 +5,11 @@
     <!--  activities titles -->
     <string name="account_management_activity_title">Account Management</string>
     <string name="account_view_activity_title">MPOS Viewer</string>
+    <string name="settings_activity_title">MPOS Viewer Settings</string>
 
     <!-- accounts management -->
     <string name="accounts_management_action_add">Add</string>
+    <string name="accounts_management_action_settings">Settings</string>
     <string name="accounts_management_context_action_remove">Remove</string>
     <string name="accounts_management_unknown_qr_toast">Scanned code doesn\'t contain any MPOS account</string>
     <string name="accounts_management_account_already_added">The account is already added</string>
@@ -68,4 +70,8 @@
     <!-- formats -->
     <string name="format_time_secs">%d sec</string>
     <string name="format_time_mins_secs">%1$d min %2$d sec</string>
+
+    <!-- settings -->
+    <string name="setting_trust_all_ssl_certs_title">Trust all SSL certificates</string>
+    <string name="setting_trust_all_ssl_certs_summary">Check if you\'d like to trust all HTTPS hosts even they aren\'t trusted by default</string>
 </resources>

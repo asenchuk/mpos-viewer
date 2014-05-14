@@ -121,10 +121,13 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
         boolean result = true;
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         switch (item.getItemId()) {
             case R.id.accounts_management_remove:
-                removePool((int)info.id);
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+                if(info != null) {
+                    removePool((int)info.id);
+                }
+                break;
             default:
                 result = super.onContextItemSelected(item);
                 break;
@@ -146,6 +149,9 @@ public class AccountsManagementActivity extends SherlockFragmentActivity impleme
                 // use com.google.zxing.android-integration
                 IntentIntegrator integrator = new IntentIntegrator(this);
                 integrator.initiateScan();
+                break;
+            case R.id.accounts_management_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
                 break;
             default:
                 result = super.onOptionsItemSelected(item);
